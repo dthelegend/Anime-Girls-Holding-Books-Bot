@@ -1,7 +1,11 @@
-import * as Discord from 'discord.js';
-import * as fs from 'fs';
+import Discord from 'discord.js';
+import fs from 'fs';
+import express from 'express';
+
+const PORT : number = parseInt(process.env.PORT, 10) || 3000
 
 const client = new Discord.Client();
+const app : express.Application = express();
 
 const banlist = ["Memes", "Uncategorized",".git", "Other", "Personification"];
 
@@ -20,7 +24,7 @@ async function search(message : string) : Promise<Discord.MessageAttachment> {
 }
 
 client.on('ready', () => {
-    console.log('Proud Mary keep on burnin\'');
+    console.log('Big wheel keep on turnin\'');
 });
 
 client.on('message', (message) => {
@@ -31,5 +35,13 @@ client.on('message', (message) => {
     })
 })
 
+app.get('*', (req, res) => {
+    res.redirect('https://www.youtube.com/watch?v=-51AfyMqnpI');
+});
+
 /* START */
 client.login(process.env.DISCORD_TOKEN);
+
+app.listen(PORT, () => {
+    console.log('Proud Mary keep on burnin\'');
+});
