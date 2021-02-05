@@ -8,11 +8,16 @@ const client = new Discord.Client();
 const app : express.Application = express();
 
 const banlist = ["Memes", "Uncategorized",".git", "Other", "Personification"];
+const substitutes = {"Go":"Golang"};
+
+function substitute(name) {
+    return substitutes[name] || name;
+}
 
 async function search(message : string) : Promise<Discord.MessageAttachment> {
     const images_fs : fs.Dirent[] = fs.readdirSync('./images', { "withFileTypes":true });
     for(const folder of images_fs.filter(x => x.isDirectory() && !banlist.includes(x.name))) {
-        const language_regex = new RegExp(`(?<=[^A-Z'+]|^)${folder.name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}(?=[^A-Z+]|$)`, 'gi');
+        const language_regex = new RegExp(`(?<=[^A-Z'+]|^)${substitute(folder.name).replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}(?=[^A-Z+]|$)`, 'gi');
         if(language_regex.test(message)) {
             const language_fs : fs.Dirent[] = fs.readdirSync(`./images/${folder.name}`, { "withFileTypes":true }).filter(x => x.isFile());
             const file = `./images/${folder.name}/${language_fs[Math.floor(Math.random() * language_fs.length)].name}`
@@ -35,7 +40,7 @@ client.on('message', (message) => {
     })
 })
 
-app.get('*', (req, res) => {
+app.get('*', (_req, res) => {
     res.redirect('https://www.youtube.com/watch?v=-51AfyMqnpI');
 });
 
