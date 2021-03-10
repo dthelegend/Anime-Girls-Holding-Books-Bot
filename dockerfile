@@ -1,13 +1,16 @@
-FROM node:12.18-alpine
+FROM alpine/git as getImages
+WORKDIR /images
+RUN git clone "https://github.com/laynH/Anime-Girls-Holding-Programming-Books.git" . && rm -rf ./.git
+
+FROM node:14.16-alpine
 ENV NODE_ENV=production
 ENV PORT=3000
-WORKDIR /usr/src/app
-COPY ["package.json", "package-lock.json*", "npm-shrinkwrap.json*", "./"]
-RUN npm install --production --silent && mv node_modules ../
-COPY ./build .
-
-COPY ./images ./images
+WORKDIR /app
+COPY ["package.json", "package-lock.json*", "./"]
+RUN npm install --production
+COPY --from=getImages ./images ./images
+COPY . .
 
 EXPOSE ${PORT}
 
-CMD ["node", "bot.js"]
+CMD ["npm", "start"]
