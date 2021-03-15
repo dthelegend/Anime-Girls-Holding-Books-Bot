@@ -8,7 +8,7 @@ const client = new Discord.Client();
 const app : express.Application = express();
 
 const banlist = ["Memes", "Uncategorized",".git", "Other", "Personification"];
-const substitutes : {[l : string]: string} = {"Go":"Golang", "V":"VLang"};
+const substitutes : {[l : string]: string} = {"Go":"GoLang", "V":"VLang", "D":"DLang"};
 
 function substitute(name : string) : string {
     return substitutes[name] || name;
@@ -38,7 +38,7 @@ client.on('message', (message) => {
     if(message.author.bot) return;
     search(message.content)
     .then(attachment => {
-        if(attachment) message.channel.send('', attachment);
+        if(attachment) message.channel.send('', attachment).catch();
     })
     .catch(err => console.error("There has been an error in search:\n" + err))
 })
